@@ -2,28 +2,34 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Pasien;
 use App\Models\Dokter;
-use App\Models\Resep;
-use App\Models\Transaksi;
+use App\Models\Pasien;
+use App\Services\DataService;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        // Ambil semua data
+        // Ambil data dari database
         $pasien = Pasien::all();
         $dokter = Dokter::all();
-        $resep = Resep::all();
-        $transaksi = Transaksi::whereMonth('created_at', date('m'))->get();
+
+        // Ambil data dari DataService (in-memory)
+        $resep = DataService::getResep();
+        $transaksi = DataService::getTransaksi();
+
+        // Filter transaksi bulan ini
+        $transaksi_bulan_ini = $transaksi->filter(function ($item) {
+            return isset($item['created_at']) &&
+                   date('m', strtotime($item['created_at'])) == date('m');
+        });
 
         // Siapkan data untuk dikirim ke view
         $data = [
             'total_pasien' => $pasien->count(),
             'total_dokter' => $dokter->count(),
             'total_resep' => $resep->count(),
-            'pendapatan_bulan_ini' => $transaksi->sum('jumlah_bayar'),
+            'pendapatan_bulan_ini' => $transaksi_bulan_ini->sum('jumlah_bayar'),
             'pengeluaran_bulan_ini' => 187000000,
         ];
 

@@ -1,13 +1,14 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\PenggunaController;
-use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DokterController;
+use App\Http\Controllers\FarmasiController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PasienController;
+use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\PoliklinikController;
 use Illuminate\Support\Facades\Route;
 
@@ -27,8 +28,8 @@ Route::get('/', function () {
 });
 
 // Authentication
-Route::post('/login', [LoginController::class, 'store'])->name('login');
-Route::get('/login', [LoginController::class, 'show'])->name('login.show');
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LogoutController::class, 'store'])->name('logout');
 Route::get('/register', [RegisterController::class, 'show'])->name('register.show');
 Route::post('/register', [RegisterController::class, 'store'])->name('register');
@@ -69,6 +70,16 @@ Route::middleware(['auth', 'checkRole:admin'])->group(function () {
     Route::get('/create_poli', [PoliklinikController::class, 'index'])->name('poli.index');
     Route::post('/insert_poli', [PoliklinikController::class, 'store'])->name('poli.store');
     Route::delete('/delete_poli/{id}', [PoliklinikController::class, 'destroy'])->name('poli.delete');
+
+    // Farmasi
+    Route::get('/farmasi', [FarmasiController::class, 'index'])->name('farmasi.index');
+    Route::get('/farmasi/create', [FarmasiController::class, 'create'])->name('farmasi.create');
+    Route::post('/farmasi', [FarmasiController::class, 'store'])->name('farmasi.store');
+    Route::get('/farmasi/{id}', [FarmasiController::class, 'show'])->name('farmasi.show');
+    Route::get('/farmasi/{id}/edit', [FarmasiController::class, 'edit'])->name('farmasi.edit');
+    Route::put('/farmasi/{id}', [FarmasiController::class, 'update'])->name('farmasi.update');
+    Route::delete('/farmasi/{id}', [FarmasiController::class, 'destroy'])->name('farmasi.destroy');
+    Route::post('/farmasi/{id}/proses', [FarmasiController::class, 'proses'])->name('farmasi.proses');
 });
 
 // User Routes
@@ -94,4 +105,14 @@ Route::middleware(['auth', 'checkRole:admin,pengguna'])->group(function () {
     Route::get('/edit_pasien/{id}', [PasienController::class, 'edit'])->name('pasien.edit');
     Route::put('/update_pasien/{id}', [PasienController::class, 'update'])->name('pasien.update');
     Route::get('/detail_pasien/{id}', [PasienController::class, 'detail'])->name('pasien.detail');
+
+    // Farmasi
+    Route::get('/farmasi', [FarmasiController::class, 'index'])->name('farmasi.index');
+    Route::get('/farmasi/create', [FarmasiController::class, 'create'])->name('farmasi.create');
+    Route::post('/farmasi', [FarmasiController::class, 'store'])->name('farmasi.store');
+    Route::get('/farmasi/{id}', [FarmasiController::class, 'show'])->name('farmasi.show');
+    Route::get('/farmasi/{id}/edit', [FarmasiController::class, 'edit'])->name('farmasi.edit');
+    Route::put('/farmasi/{id}', [FarmasiController::class, 'update'])->name('farmasi.update');
+    Route::delete('/farmasi/{id}', [FarmasiController::class, 'destroy'])->name('farmasi.destroy');
+    Route::post('/farmasi/{id}/proses', [FarmasiController::class, 'proses'])->name('farmasi.proses');
 });
