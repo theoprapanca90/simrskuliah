@@ -1,0 +1,4 @@
+server-id=2963300
+log_bin=mysql-bin
+log_error=mysql-bin.err
+binlog_ignore_db=sakila
